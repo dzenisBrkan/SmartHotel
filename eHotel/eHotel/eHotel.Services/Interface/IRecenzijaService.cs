@@ -1,6 +1,6 @@
 ﻿namespace eHotel.eHotel.Services.Interface
 {
-    public interface IRecenzijaServise
+    public interface IRecenzijaService
     {
     }
 }

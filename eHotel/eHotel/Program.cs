@@ -1,5 +1,7 @@
 using eHotel.Database;
 using eHotel.eHotel.Services;
+using eHotel.eHotel.Services.Interface;
+using eHotel.eHotel.Services.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace eHotel.Database;
+﻿namespace eHotel.Database;
 
 public partial class Sobe
 {
@@ -11,11 +8,7 @@ public partial class Sobe
 
     public string Sifra { get; set; } = null!;
 
-    public decimal Cijena { get; set; }
-
     public int VrstaId { get; set; }
-
-    public int JedinicaMjereId { get; set; }
 
     public byte[] Slika { get; set; } = null!;
 
@@ -24,4 +17,10 @@ public partial class Sobe
     public bool? Status { get; set; }
 
     public string StateMachine { get; set; } = null!;
+
+    public virtual VrsteSoba Vrsta { get; set; } = null!;
+
+    public virtual ICollection<Rezervacija> Rezervacije { get; set; } = new List<Rezervacija>();
+
+    public virtual ICollection<Recenzije> Recenzije { get; set; } = new List<Recenzije>();
 }

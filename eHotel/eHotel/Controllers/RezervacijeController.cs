@@ -1,0 +1,12 @@
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace eHotel.Controllers
+{
+    public class RezervacijeController : Controller
+    {
+        public IActionResult Index()
+        {
+            return View();
+        }
+    }
+}

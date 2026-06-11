@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace eHotel.Database;
+﻿namespace eHotel.Database;
 
 public partial class Uloge
 {

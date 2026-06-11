@@ -1,6 +1,6 @@
 ﻿using eHotel.Model;
-using eHotel.eHotel.Services;
 using Microsoft.AspNetCore.Mvc;
+using eHotel.eHotel.Services.Interface;
 
 namespace eHotel.Controllers;
 

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace eHotel.Database;
+﻿namespace eHotel.Database;
 
 public partial class KorisniciUloge
 {
@@ -13,9 +10,7 @@ public partial class KorisniciUloge
 
     public DateTime DatumIzmjene { get; set; }
 
-    public int? KorisniciKorisnikId { get; set; }
-
-    public virtual Korisnici? KorisniciKorisnik { get; set; }
+    public virtual Korisnici Korisnik { get; set; } = null!;
 
     public virtual Uloge Uloga { get; set; } = null!;
 }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace eHotel.Database;
+﻿namespace eHotel.Database;
 
 public partial class Korisnici
 {
@@ -17,7 +14,15 @@ public partial class Korisnici
 
     public string KorisnickoIme { get; set; } = null!;
 
+    public string PasswordHash { get; set; } = null!;
+
     public bool? Status { get; set; }
 
+    public DateTime DatumRegistracije { get; set; }
+
     public virtual ICollection<KorisniciUloge> KorisniciUloges { get; set; } = new List<KorisniciUloge>();
+
+    public virtual ICollection<Rezervacija> Rezervacije { get; set; } = new List<Rezervacija>();
+
+    public virtual ICollection<Recenzije> Recenzije { get; set; } = new List<Recenzije>();
 }

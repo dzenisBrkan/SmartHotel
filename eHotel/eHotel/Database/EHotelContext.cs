@@ -15,36 +15,32 @@ public partial class EHotelContext : DbContext
     {
     }
 
-    public virtual DbSet<JediniceMjere> JediniceMjeres { get; set; }
-
     public virtual DbSet<Korisnici> Korisnicis { get; set; }
-
     public virtual DbSet<KorisniciUloge> KorisniciUloges { get; set; }
-
-    public virtual DbSet<Sobe> Sobes { get; set; }
-
     public virtual DbSet<Uloge> Uloges { get; set; }
-
+    public virtual DbSet<Sobe> Sobes { get; set; }
     public virtual DbSet<VrsteSoba> VrsteSobas { get; set; }
+    public virtual DbSet<Rezervacija> Rezervacijas { get; set; }
+    public virtual DbSet<RezervacijaUsluge> RezervacijaUsluges { get; set; }
+    public virtual DbSet<DodatneUsluge> DodatneUsluges { get; set; }
+    public virtual DbSet<Placanja> Placanjas { get; set; }
+    public virtual DbSet<Recenzije> Recenzijes { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=localhost, 1433;Initial Catalog=eHotel; User=sa; Password=test123!; Trusted_Connection=true;TrustServerCertificate=True");
+        => optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS;Database=eHotel;Trusted_Connection=True;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<JediniceMjere>(entity =>
-        {
-            entity.HasKey(e => e.JedinicaMjereId);
-
-            entity.ToTable("JediniceMjere");
-        });
-
         modelBuilder.Entity<Korisnici>(entity =>
         {
             entity.HasKey(e => e.KorisnikId);
-
             entity.ToTable("Korisnici");
+        });
+
+        modelBuilder.Entity<Uloge>(entity =>
+        {
+            entity.HasKey(e => e.UlogaId);
+            entity.ToTable("Uloge");
         });
 
         modelBuilder.Entity<KorisniciUloge>(entity =>
@@ -53,34 +49,105 @@ public partial class EHotelContext : DbContext
 
             entity.ToTable("KorisniciUloge");
 
-            entity.HasIndex(e => e.KorisniciKorisnikId, "IX_KorisniciUloge_KorisniciKorisnikId");
+            entity.HasOne(d => d.Korisnik)
+                .WithMany(p => p.KorisniciUloges)
+                .HasForeignKey(d => d.KorisnikId);
 
-            entity.HasIndex(e => e.UlogaId, "IX_KorisniciUloge_UlogaId");
-
-            entity.HasOne(d => d.KorisniciKorisnik).WithMany(p => p.KorisniciUloges).HasForeignKey(d => d.KorisniciKorisnikId);
-
-            entity.HasOne(d => d.Uloga).WithMany(p => p.KorisniciUloges).HasForeignKey(d => d.UlogaId);
-        });
-
-        modelBuilder.Entity<Sobe>(entity =>
-        {
-            entity.ToTable("Sobe");
-
-            entity.Property(e => e.Cijena).HasColumnType("decimal(18, 2)");
-        });
-
-        modelBuilder.Entity<Uloge>(entity =>
-        {
-            entity.HasKey(e => e.UlogaId);
-
-            entity.ToTable("Uloge");
+            entity.HasOne(d => d.Uloga)
+                .WithMany(p => p.KorisniciUloges)
+                .HasForeignKey(d => d.UlogaId);
         });
 
         modelBuilder.Entity<VrsteSoba>(entity =>
         {
             entity.HasKey(e => e.VrstaId);
-
             entity.ToTable("VrsteSoba");
+
+            entity.Property(e => e.Cijena)
+                .HasColumnType("decimal(18,2)");
+        });
+
+        modelBuilder.Entity<Sobe>(entity =>
+        {
+            entity.HasKey(e => e.SobeId);
+
+            entity.ToTable("Sobe");
+
+            entity.HasOne(d => d.Vrsta)
+                .WithMany(p => p.Sobe)
+                .HasForeignKey(d => d.VrstaId);
+        });
+
+        modelBuilder.Entity<Rezervacija>(entity =>
+        {
+            entity.HasKey(e => e.RezervacijaId);
+
+            entity.ToTable("Rezervacija");
+
+            entity.Property(e => e.UkupnaCijena)
+                .HasColumnType("decimal(18,2)");
+
+            entity.HasOne(d => d.Korisnik)
+                .WithMany(p => p.Rezervacije)
+                .HasForeignKey(d => d.KorisnikId);
+
+            entity.HasOne(d => d.Soba)
+                .WithMany(p => p.Rezervacije)
+                .HasForeignKey(d => d.SobaId);
+        });
+
+        modelBuilder.Entity<DodatneUsluge>(entity =>
+        {
+            entity.HasKey(e => e.UslugaId);
+
+            entity.ToTable("DodatneUsluge");
+
+            entity.Property(e => e.Cijena)
+                .HasColumnType("decimal(18,2)");
+        });
+
+        modelBuilder.Entity<RezervacijaUsluge>(entity =>
+        {
+            entity.HasKey(e => e.RezervacijaUslugaId);
+
+            entity.ToTable("RezervacijaUsluge");
+
+            entity.HasOne(d => d.Rezervacija)
+                .WithMany(p => p.RezervacijaUsluge)
+                .HasForeignKey(d => d.RezervacijaId);
+
+            entity.HasOne(d => d.Usluga)
+                .WithMany(p => p.RezervacijaUsluge)
+                .HasForeignKey(d => d.UslugaId);
+        });
+
+        modelBuilder.Entity<Placanja>(entity =>
+        {
+            entity.HasKey(e => e.PlacanjeId);
+
+            entity.ToTable("Placanja");
+
+            entity.Property(e => e.Iznos)
+                .HasColumnType("decimal(18,2)");
+
+            entity.HasOne(d => d.Rezervacija)
+                .WithMany(p => p.Placanja)
+                .HasForeignKey(d => d.RezervacijaId);
+        });
+
+        modelBuilder.Entity<Recenzije>(entity =>
+        {
+            entity.HasKey(e => e.RecenzijeId);
+
+            entity.ToTable("Recenzije");
+
+            entity.HasOne(d => d.Korisnik)
+                .WithMany(p => p.Recenzije)
+                .HasForeignKey(d => d.KorisnikId);
+
+            entity.HasOne(d => d.Soba)
+                .WithMany(p => p.Recenzije)
+                .HasForeignKey(d => d.SobaId);
         });
 
         OnModelCreatingPartial(modelBuilder);

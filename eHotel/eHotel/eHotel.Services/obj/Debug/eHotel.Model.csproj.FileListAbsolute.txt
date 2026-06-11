@@ -1,0 +1,6 @@
+C:\Users\PC\Desktop\eHotel\eHotel\eHotel.Services\obj\Debug\eHotel.Model.csproj.AssemblyReference.cache
+C:\Users\PC\Desktop\eHotel\eHotel\eHotel.Services\obj\Debug\eHotel.Model.csproj.CoreCompileInputs.cache
+C:\Users\PC\Desktop\eHotel\eHotel\eHotel.Services\bin\Debug\eHotel.Services.dll
+C:\Users\PC\Desktop\eHotel\eHotel\eHotel.Services\bin\Debug\eHotel.Services.pdb
+C:\Users\PC\Desktop\eHotel\eHotel\eHotel.Services\obj\Debug\eHotel.Services.dll
+C:\Users\PC\Desktop\eHotel\eHotel\eHotel.Services\obj\Debug\eHotel.Services.pdb

@@ -72,5 +72,19 @@ namespace eHotel.Controllers
             var result = _rezervacijeService.OtkaziRezervaciju(int.Parse(userId),rezervacijaId);
             return Ok(result);
         }
+
+        [HttpPut("{id}/checkin")]
+        [Authorize(Roles = "Admin,Recepcioner")]
+        public ActionResult<RezervacijaDto> CheckIn(int id)
+        {
+            return Ok(_rezervacijeService.CheckIn(id));
+        }
+
+        [HttpPut("{id}/checkout")]
+        [Authorize(Roles = "Admin,Recepcioner")]
+        public ActionResult<RezervacijaDto> CheckOut(int id)
+        {
+            return Ok(_rezervacijeService.CheckOut(id));
+        }
     }
 }

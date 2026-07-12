@@ -319,4 +319,32 @@ public class RezervacijaService : IRezervacijeService
             }).ToList()
         };
     }
+    
+    public RezervacijaDto CheckIn(int rezervacijaId)
+    {
+        var entity = _context.Rezervacijas.FirstOrDefault(x => x.RezervacijaId == rezervacijaId);
+
+        if (entity == null)
+            throw new Exception("Rezervacija nije pronađena.");
+
+        entity.Status = (int)StatusRezervacije.Potvrdjena;
+
+        _context.SaveChanges();
+
+        return GetById(rezervacijaId);
+    }
+    
+    public RezervacijaDto CheckOut(int rezervacijaId)
+    {
+        var entity = _context.Rezervacijas.FirstOrDefault(x => x.RezervacijaId == rezervacijaId);
+
+        if (entity == null)
+            throw new Exception("Rezervacija nije pronađena.");
+
+        entity.Status = (int)StatusRezervacije.Zavrsena;
+
+        _context.SaveChanges();
+
+        return GetById(rezervacijaId);
+    }
 }

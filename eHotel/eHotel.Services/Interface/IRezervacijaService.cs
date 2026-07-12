@@ -10,4 +10,6 @@ public interface IRezervacijeService
     bool Delete(int id);
     List<RezervacijaDto> GetByKorisnikId(int korisnikId);
     RezervacijaDto OtkaziRezervaciju(int korisnikId, int rezervacijaId);
+    RezervacijaDto CheckIn(int rezervacijaId);
+    RezervacijaDto CheckOut(int rezervacijaId);
 }

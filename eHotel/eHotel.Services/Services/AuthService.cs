@@ -84,7 +84,7 @@ namespace eHotel.eHotel.Services.Services
             var gostRole = await _context.Uloges.FirstOrDefaultAsync(x => x.Naziv == "Gost");
             if (gostRole == null)
             {
-                gostRole = new Uloge { Naziv = "Gost", Opis = "Gost hotela" };
+                gostRole = new Uloge { Naziv = "Gost", Opis = "Korisnik hotela" };
                 _context.Uloges.Add(gostRole);
                 await _context.SaveChangesAsync();
             }

@@ -62,6 +62,12 @@ public class PlacanjaService : IPlacanjeService
 
     public PlacanjeDto Insert(PlacanjeInsertRequest request)
     {
+        bool postoji = _context.Placanjas
+            .Any(x => x.RezervacijaId == request.RezervacijaId);
+
+        if(postoji)
+            throw new Exception("Rezervacija je već plaćena.");
+        
         if (request.Iznos <= 0)
             throw new Exception("Iznos mora biti veći od 0.");
 
@@ -76,7 +82,7 @@ public class PlacanjaService : IPlacanjeService
         {
             RezervacijaId = request.RezervacijaId,
             Iznos = request.Iznos,
-            Datum = request.Datum,
+            Datum = DateTime.Now,
             Status = request.Status,
             TransakcijaId = request.TransakcijaId
         };
@@ -125,17 +131,20 @@ public class PlacanjaService : IPlacanjeService
             TransakcijaId = entity.TransakcijaId
         };
     }
-
-    public bool Delete(int id)
+    
+    public List<PlacanjeDto> GetByGostId(int korisnikId)
     {
-        var entity = _context.Placanjas.FirstOrDefault(x => x.PlacanjeId == id);
-
-        if (entity == null)
-            return false;
-
-        _context.Placanjas.Remove(entity);
-        _context.SaveChanges();
-
-        return true;
+        return _context.Placanjas
+            .Where(x => x.Rezervacija.KorisnikId == korisnikId)
+            .Select(x => new PlacanjeDto
+            {
+                PlacanjeId = x.PlacanjeId,
+                RezervacijaId = x.RezervacijaId,
+                Iznos = x.Iznos,
+                Datum = x.Datum,
+                Status = x.Status,
+                TransakcijaId = x.TransakcijaId
+            })
+            .ToList();
     }
 }

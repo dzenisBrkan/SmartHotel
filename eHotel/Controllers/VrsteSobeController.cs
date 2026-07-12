@@ -18,12 +18,14 @@ namespace eHotel.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult<List<VrstaSobeDto>> Get()
         {
             return Ok(_service.Get());
         }
 
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public ActionResult<VrstaSobeDto> GetById(int id)
         {
             var result = _service.GetById(id);
@@ -34,7 +36,7 @@ namespace eHotel.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Zaposlenik")]
+        [Authorize(Roles = "Admin,Recepcioner")]
         public ActionResult<VrstaSobeDto> Insert([FromBody] VrstaSobeInsertRequest request)
         {
             var result = _service.Insert(request);
@@ -42,7 +44,7 @@ namespace eHotel.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Zaposlenik")]
+        [Authorize(Roles = "Admin,Recepcioner")]
         public ActionResult<VrstaSobeDto> Update(int id, [FromBody] VrstaSobeUpdateRequest request)
         {
             var result = _service.Update(id, request);
@@ -50,7 +52,7 @@ namespace eHotel.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Zaposlenik")]
+        [Authorize(Roles = "Admin,Recepcioner")]
         public ActionResult Delete(int id)
         {
             var deleted = _service.Delete(id);

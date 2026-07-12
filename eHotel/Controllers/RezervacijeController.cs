@@ -1,4 +1,5 @@
-﻿using eHotel.Database;
+﻿using System.Security.Claims;
+using eHotel.Database;
 using eHotel.Dto.Rezervacija;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,58 +19,57 @@ namespace eHotel.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<Rezervacija>> Get([FromQuery] RezervacijaSearchObject search)
+        [Authorize(Roles = "Admin,Recepcioner")]
+        public ActionResult<List<RezervacijaDto>> Get([FromQuery] RezervacijaSearchObject search)
         {
             return Ok(_rezervacijeService.Get(search));
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Rezervacija> GetById(int id)
+        [Authorize(Roles = "Admin,Recepcioner")]
+        public ActionResult<RezervacijaDto> GetById(int id)
         {
             var result = _rezervacijeService.GetById(id);
+            
             if (result == null)
                 return NotFound();
-
+            
             return Ok(result);
         }
-
-        [HttpPost]
-        public ActionResult<Rezervacija> Insert([FromBody] RezervacijaInsertRequest request)
-        {
-            var result = _rezervacijeService.Insert(request);
-            return Ok(result);
-        }
-
+        
         [HttpPut("{id}")]
-        [Authorize(Roles = "Zaposlenik")]
-        public ActionResult<Rezervacija> Update(int id, [FromBody] RezervacijaUpdateRequest request)
+        [Authorize(Roles = "Admin,Recepcioner")]
+        public ActionResult<RezervacijaDto> Update(int id, [FromBody] RezervacijaUpdateRequest request)
         {
             var result = _rezervacijeService.Update(id, request);
             return Ok(result);
         }
-
-        [HttpDelete("{id}")]
-        [Authorize(Roles = "Zaposlenik")]
-        public ActionResult Delete(int id)
+        
+        [HttpPost]
+        [Authorize(Roles = "Admin,Recepcioner,Gost")]
+        public ActionResult<RezervacijaDto> Insert([FromBody] RezervacijaInsertRequest request)
         {
-            var result = _rezervacijeService.Delete(id);
-
-            if (!result)
-                return NotFound();
-
-            return NoContent();
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            var role = User.FindFirst(ClaimTypes.Role)!.Value;
+            var result = _rezervacijeService.Insert(request, userId, role);
+            return Ok(result);
         }
 
-        [HttpGet("korisnik/{korisnikId}")]
-        public ActionResult<List<Rezervacija>> GetByKorisnikId(int korisnikId)
+        [HttpGet("me")]
+        [Authorize(Roles = "Gost")]
+        public ActionResult<List<RezervacijaDto>> GetByKorisnikId()
         {
-            return Ok(_rezervacijeService.GetByKorisnikId(korisnikId));
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var result = _rezervacijeService.GetByKorisnikId(int.Parse(userId));
+            return Ok(result);
         }
 
         [HttpPut("{rezervacijaId}/otkazi")]
-        public ActionResult<Rezervacija> OtkaziRezervaciju(int rezervacijaId)
+        [Authorize(Roles = "Gost")]
+        public ActionResult<RezervacijaDto> OtkaziRezervaciju(int rezervacijaId)
         {
-            var result = _rezervacijeService.OtkaziRezervaciju(rezervacijaId);
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var result = _rezervacijeService.OtkaziRezervaciju(int.Parse(userId),rezervacijaId);
             return Ok(result);
         }
     }

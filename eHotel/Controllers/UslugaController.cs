@@ -1,11 +1,13 @@
 ﻿using eHotel.Dto.DodatneUsluge;
 using eHotel.eHotel.Services.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eHotel.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class UslugaController : ControllerBase
     {
         private readonly IDodatneUslugeService _service;
@@ -25,7 +27,6 @@ namespace eHotel.Controllers
         public ActionResult<DodatnaUslugaDto> GetById(int id)
         {
             var result = _service.GetById(id);
-
             if (result == null)
                 return NotFound();
 
@@ -33,18 +34,21 @@ namespace eHotel.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,Recepcioner")]
         public ActionResult<DodatnaUslugaDto> Insert([FromBody] DodatnaUslugaInsertRequest request)
         {
             return Ok(_service.Insert(request));
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin,Recepcioner")]
         public ActionResult<DodatnaUslugaDto> Update(int id, [FromBody] DodatnaUslugaUpdateRequest request)
         {
             return Ok(_service.Update(id, request));
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin,Recepcioner")]
         public ActionResult<bool> Delete(int id)
         {
             var result = _service.Delete(id);

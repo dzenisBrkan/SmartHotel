@@ -9,6 +9,6 @@ namespace eHotel.eHotel.Services.Interface
         List<PlacanjeDto> GetByRezervacijaId(int rezervacijaId);
         PlacanjeDto Insert(PlacanjeInsertRequest request);
         PlacanjeDto Update(int id, PlacanjeUpdateRequest request);
-        bool Delete(int id);
+        List<PlacanjeDto> GetByGostId(int korisnikId);
     }
 }

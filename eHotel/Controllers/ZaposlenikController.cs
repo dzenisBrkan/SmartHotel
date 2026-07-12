@@ -7,7 +7,7 @@ namespace eHotel.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Zaposlenik")]
+    [Authorize(Roles = "Admin")]
     public class ZaposlenikController : ControllerBase
     {
         private readonly IZaposlenikService _service;
@@ -59,17 +59,5 @@ namespace eHotel.Controllers
 
             return NoContent();
         }
-
-        [HttpPost("{id}/roles/{roleName}")]
-        public ActionResult<KorisnikDto> AssignRole(int id, string roleName)
-        {
-            return Ok(_service.AssignRole(id, roleName));
-        }
-
-        [HttpDelete("{id}/roles/{roleName}")]
-        public ActionResult<KorisnikDto> RemoveRole(int id, string roleName)
-        {
-            return Ok(_service.RemoveRole(id, roleName));
-        }
-    }
+    }   
 }

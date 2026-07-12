@@ -1,5 +1,7 @@
 ﻿
+using System.Security.Claims;
 using eHotel.Dto.Placanje;
+using eHotel.Dto.Rezervacija;
 using eHotel.eHotel.Services.Interface;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,18 +19,12 @@ namespace eHotel.Controllers
         {
             _service = service;
         }
-
-        [HttpGet]
-        public ActionResult<List<PlacanjeDto>> Get()
-        {
-            return Ok(_service.Get());
-        }
-
+        
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin,Recepcioner")]
         public ActionResult<PlacanjeDto> GetById(int id)
         {
             var result = _service.GetById(id);
-
             if (result == null)
                 return NotFound();
 
@@ -36,33 +32,40 @@ namespace eHotel.Controllers
         }
 
         [HttpGet("by-rezervacija/{rezervacijaId}")]
+        [Authorize(Roles = "Admin,Recepcioner")]
         public ActionResult<List<PlacanjeDto>> GetByRezervacijaId(int rezervacijaId)
         {
             return Ok(_service.GetByRezervacijaId(rezervacijaId));
         }
-
+        
+        [HttpGet]
+        [Authorize(Roles = "Admin,Recepcioner")]
+        public ActionResult<List<PlacanjeDto>> Get()
+        {
+            return Ok(_service.Get());
+        }
+        
         [HttpPost]
-        [Authorize(Roles = "Zaposlenik")]
+        [Authorize(Roles = "Admin,Recepcioner")]
         public ActionResult<PlacanjeDto> Insert([FromBody] PlacanjeInsertRequest request)
         {
             return Ok(_service.Insert(request));
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Zaposlenik")]
+        [Authorize(Roles = "Admin,Recepcioner")]
         public ActionResult<PlacanjeDto> Update(int id, [FromBody] PlacanjeUpdateRequest request)
         {
             return Ok(_service.Update(id, request));
         }
 
-        [HttpDelete("{id}")]
-        [Authorize(Roles = "Zaposlenik")]
-        public ActionResult<bool> Delete(int id)
+        [HttpGet("me")]
+        [Authorize(Roles = "Gost")]
+        public ActionResult<List<PlacanjeDto>> GetByGostId()
         {
-            var result = _service.Delete(id);
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
-            if (!result)
-                return NotFound();
+            var result = _service.GetByGostId(userId);
 
             return Ok(result);
         }

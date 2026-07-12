@@ -48,7 +48,7 @@ public class RecenzijeService : IRecenzijaService
         return MapToDto(entity);
     }
 
-    public RecenzijaDto Insert(RecenzijaInsertRequest request)
+    public RecenzijaDto Insert(RecenzijaInsertRequest request, int korisnikId)
     {
         if (request.Ocjena < 1 || request.Ocjena > 5)
             throw new Exception("Ocjena mora biti između 1 i 5.");
@@ -56,7 +56,7 @@ public class RecenzijeService : IRecenzijaService
         if (string.IsNullOrWhiteSpace(request.Komentar))
             throw new Exception("Komentar je obavezan.");
 
-        var korisnik = _context.Korisnicis.FirstOrDefault(x => x.KorisnikId == request.KorisnikId);
+        var korisnik = _context.Korisnicis.FirstOrDefault(x => x.KorisnikId == korisnikId);
         if (korisnik == null)
             throw new Exception("Korisnik ne postoji.");
 
@@ -66,7 +66,7 @@ public class RecenzijeService : IRecenzijaService
 
         // Korisnik mora imati završenu rezervaciju za tu sobu
         var imaZavrsenuRezervaciju = _context.Rezervacijas.Any(x =>
-            x.KorisnikId == request.KorisnikId &&
+            x.KorisnikId == korisnikId &&
             x.SobaId == request.SobaId &&
             x.Status == (int)StatusRezervacije.Zavrsena &&
             x.DatumDo < DateTime.Now);
@@ -76,7 +76,7 @@ public class RecenzijeService : IRecenzijaService
 
         // Jedan korisnik može ostaviti samo jednu recenziju za jednu sobu
         var postoji = _context.Recenzijes.Any(x =>
-            x.KorisnikId == request.KorisnikId &&
+            x.KorisnikId == korisnikId &&
             x.SobaId == request.SobaId);
 
         if (postoji)
@@ -84,7 +84,7 @@ public class RecenzijeService : IRecenzijaService
 
         var entity = new Recenzije
         {
-            KorisnikId = request.KorisnikId,
+            KorisnikId = korisnikId,
             SobaId = request.SobaId,
             Ocjena = request.Ocjena,
             Komentar = request.Komentar,
@@ -97,13 +97,16 @@ public class RecenzijeService : IRecenzijaService
         return GetById(entity.RecenzijeId);
     }
 
-    public RecenzijaDto Update(int id, RecenzijaUpdateRequest request)
+    public RecenzijaDto Update(int id, RecenzijaUpdateRequest request, int korisnikId, string role)
     {
         var entity = _context.Recenzijes.FirstOrDefault(x => x.RecenzijeId == id);
 
         if (entity == null)
             throw new Exception("Recenzija nije pronađena.");
 
+        if(role == "Gost" && entity.KorisnikId != korisnikId)
+            throw new Exception("Nemate pravo izmijeniti ovu recenziju.");
+        
         if (request.Ocjena < 1 || request.Ocjena > 5)
             throw new Exception("Ocjena mora biti između 1 i 5.");
 
@@ -118,12 +121,16 @@ public class RecenzijeService : IRecenzijaService
         return GetById(entity.RecenzijeId);
     }
 
-    public bool Delete(int id)
+    public bool Delete(int id, int korisnikId, string role)
     {
-        var entity = _context.Recenzijes.FirstOrDefault(x => x.RecenzijeId == id);
+        var entity = _context.Recenzijes
+            .FirstOrDefault(x => x.RecenzijeId == id);
 
         if (entity == null)
             return false;
+
+        if (role == "Gost" && entity.KorisnikId != korisnikId)
+            throw new UnauthorizedAccessException("Nemate pravo obrisati ovu recenziju.");
 
         _context.Recenzijes.Remove(entity);
         _context.SaveChanges();
@@ -155,14 +162,13 @@ public class RecenzijeService : IRecenzijaService
 
     public decimal GetProsjecnaOcjenaZaSobu(int sobaId)
     {
-        var recenzije = _context.Recenzijes
-            .Where(x => x.SobaId == sobaId)
-            .ToList();
+        var query = _context.Recenzijes
+            .Where(x => x.SobaId == sobaId);
 
-        if (!recenzije.Any())
+        if (!query.Any())
             return 0;
 
-        return Math.Round(recenzije.Average(x => (decimal)x.Ocjena), 2);
+        return Math.Round(query.Average(x => (decimal)x.Ocjena), 2);
     }
 
     private RecenzijaDto MapToDto(Recenzije entity)

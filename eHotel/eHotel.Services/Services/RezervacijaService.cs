@@ -63,15 +63,25 @@ public class RezervacijaService : IRezervacijeService
         return MapToDto(entity);
     }
 
-    public RezervacijaDto Insert(RezervacijaInsertRequest request)
+    public RezervacijaDto Insert(RezervacijaInsertRequest request, int loggedUserId, string role)
     {
+        if (role == "Gost")
+            request.KorisnikId = loggedUserId;
+        
+        if ((role == "Admin" || role == "Recepcioner") && request.KorisnikId == null)
+            throw new Exception("Morate odabrati gosta.");
+        
+        if (request.DatumOd.Date < DateTime.Today)
+            throw new Exception("Datum početka rezervacije ne može biti u prošlosti.");
+        
         if (request.DatumOd >= request.DatumDo)
             throw new Exception("Datum od mora biti manji od datuma do.");
-
+        
         if (request.BrojOsoba <= 0)
             throw new Exception("Broj osoba mora biti veći od 0.");
 
         var korisnik = _context.Korisnicis.FirstOrDefault(x => x.KorisnikId == request.KorisnikId);
+        
         if (korisnik == null)
             throw new Exception("Korisnik ne postoji.");
 
@@ -105,7 +115,7 @@ public class RezervacijaService : IRezervacijeService
 
         var entity = new Rezervacija
         {
-            KorisnikId = request.KorisnikId,
+            KorisnikId = request.KorisnikId!.Value,
             SobaId = request.SobaId,
             DatumOd = request.DatumOd,
             DatumDo = request.DatumDo,
@@ -260,9 +270,9 @@ public class RezervacijaService : IRezervacijeService
             .ToList();
     }
 
-    public RezervacijaDto OtkaziRezervaciju(int rezervacijaId)
+    public RezervacijaDto OtkaziRezervaciju(int korisnikId, int rezervacijaId)
     {
-        var entity = _context.Rezervacijas.FirstOrDefault(x => x.RezervacijaId == rezervacijaId);
+        var entity = _context.Rezervacijas.FirstOrDefault(x => x.RezervacijaId == rezervacijaId && x.KorisnikId == korisnikId);
 
         if (entity == null)
             throw new Exception("Rezervacija nije pronađena.");

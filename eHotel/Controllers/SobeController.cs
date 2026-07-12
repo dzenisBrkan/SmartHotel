@@ -18,16 +18,17 @@ namespace eHotel.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public ActionResult<List<SobaDto>> Get([FromQuery] SobaSearchObject search)
         {
             return Ok(_service.Get(search));
         }
-
+        
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public ActionResult<SobaDto> GetById(int id)
         {
             var result = _service.GetById(id);
-
             if (result == null)
                 return NotFound();
 
@@ -35,21 +36,21 @@ namespace eHotel.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Zaposlenik")]
+        [Authorize(Roles = "Admin,Recepcioner")]
         public ActionResult<SobaDto> Insert([FromBody] SobaInsertRequest request)
         {
             return Ok(_service.Insert(request));
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Zaposlenik")]
+        [Authorize(Roles = "Admin,Recepcioner")]
         public ActionResult<SobaDto> Update(int id, [FromBody] SobaUpdateRequest request)
         {
             return Ok(_service.Update(id, request));
         }
 
         [HttpDelete("{id}")]
-        [Authorize(Roles = "Zaposlenik")]
+        [Authorize(Roles = "Admin,Recepcioner")]
         public ActionResult<bool> Delete(int id)
         {
             return Ok(_service.Delete(id));

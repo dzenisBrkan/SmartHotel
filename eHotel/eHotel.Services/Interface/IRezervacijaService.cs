@@ -5,9 +5,9 @@ public interface IRezervacijeService
 {
     List<RezervacijaDto> Get(RezervacijaSearchObject search);
     RezervacijaDto GetById(int id);
-    RezervacijaDto Insert(RezervacijaInsertRequest request);
+    RezervacijaDto Insert(RezervacijaInsertRequest request, int loggedUserId, string role);
     RezervacijaDto Update(int id, RezervacijaUpdateRequest request);
     bool Delete(int id);
     List<RezervacijaDto> GetByKorisnikId(int korisnikId);
-    RezervacijaDto OtkaziRezervaciju(int rezervacijaId);
+    RezervacijaDto OtkaziRezervaciju(int korisnikId, int rezervacijaId);
 }

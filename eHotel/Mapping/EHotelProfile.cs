@@ -2,9 +2,9 @@
 
 namespace eHotel.Mapping;
 
-public class eHotelProfile : Profile
+public class EHotelProfile : Profile
 {
-    public eHotelProfile()
+    public EHotelProfile()
     {
         CreateMap<Database.Korisnici, Model.Korisnici>();
     }

@@ -71,10 +71,10 @@ namespace eHotel.eHotel.Services.Services
             _context.Korisnicis.Add(entity);
             _context.SaveChanges();
 
-            var gostRole = _context.Uloges.FirstOrDefault(x => x.Naziv == "Gost");
+            var gostRole = _context.Uloges.FirstOrDefault(x => x.Naziv == "Recepcioner");
             if (gostRole == null)
             {
-                gostRole = new Uloge { Naziv = "Gost", Opis = "Gost hotela" };
+                gostRole = new Uloge { Naziv = "Recepcioner", Opis = "Upravljanje rezervacijama i gostima" };
                 _context.Uloges.Add(gostRole);
                 _context.SaveChanges();
             }
@@ -114,67 +114,7 @@ namespace eHotel.eHotel.Services.Services
             _context.SaveChanges();
             return true;
         }
-
-        public KorisnikDto AssignRole(int id, string roleName)
-        {
-            if (string.IsNullOrWhiteSpace(roleName))
-                throw new ArgumentException("Naziv role je obavezan.");
-
-            var korisnik = _context.Korisnicis
-                .Include(x => x.KorisniciUloges)
-                    .ThenInclude(ku => ku.Uloga)
-                .FirstOrDefault(x => x.KorisnikId == id);
-
-            if (korisnik == null)
-                throw new KeyNotFoundException("Korisnik nije pronađen.");
-
-            var role = _context.Uloges.FirstOrDefault(x => x.Naziv == roleName);
-            if (role == null)
-                throw new KeyNotFoundException("Uloga nije pronađena.");
-
-            if (!_context.KorisniciUloges.Any(x => x.KorisnikId == id && x.UlogaId == role.UlogaId))
-            {
-                _context.KorisniciUloges.Add(new KorisniciUloge
-                {
-                    KorisnikId = id,
-                    UlogaId = role.UlogaId,
-                    DatumIzmjene = DateTime.UtcNow
-                });
-                _context.SaveChanges();
-            }
-
-            return GetById(id)!;
-        }
-
-        public KorisnikDto RemoveRole(int id, string roleName)
-        {
-            if (string.IsNullOrWhiteSpace(roleName))
-                throw new ArgumentException("Naziv role je obavezan.");
-
-            var korisnik = _context.Korisnicis
-                .Include(x => x.KorisniciUloges)
-                    .ThenInclude(ku => ku.Uloga)
-                .FirstOrDefault(x => x.KorisnikId == id);
-
-            if (korisnik == null)
-                throw new KeyNotFoundException("Korisnik nije pronađen.");
-
-            var role = _context.Uloges.FirstOrDefault(x => x.Naziv == roleName);
-            if (role == null)
-                throw new KeyNotFoundException("Uloga nije pronađena.");
-
-            var userRole = _context.KorisniciUloges
-                .FirstOrDefault(x => x.KorisnikId == id && x.UlogaId == role.UlogaId);
-
-            if (userRole != null)
-            {
-                _context.KorisniciUloges.Remove(userRole);
-                _context.SaveChanges();
-            }
-
-            return GetById(id)!;
-        }
-
+        
         private KorisnikDto MapToDto(Korisnici entity)
         {
             return new KorisnikDto

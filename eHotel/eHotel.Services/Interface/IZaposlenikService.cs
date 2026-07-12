@@ -9,7 +9,5 @@ namespace eHotel.eHotel.Services.Interface
         KorisnikDto Insert(KorisniciInsertRequest request);
         KorisnikDto? Update(int id, KorisniciUpdateRequest request);
         bool Delete(int id);
-        KorisnikDto AssignRole(int id, string roleName);
-        KorisnikDto RemoveRole(int id, string roleName);
     }
 }

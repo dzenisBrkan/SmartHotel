@@ -1,98 +1,52 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using eHotel.eHotel.Services.Interface;
 using eHotel.Dto.Korisnici;
 
-namespace eHotel.Controllers;
-
-[ApiController]
-[Route("api/[controller]")]
-[Authorize]
-public class KorisnikController : ControllerBase
+namespace eHotel.Controllers
 {
-    private readonly IKorisnikService _service;
-    public KorisnikController(IKorisnikService korisnikService)
+    [ApiController]
+    [Route("api/[controller]")]
+    [Authorize]
+    public class KorisnikController : ControllerBase
     {
-        _service = korisnikService;
-    }
+        private readonly IKorisnikService _service;
+        public KorisnikController(IKorisnikService korisnikService)
+        {
+            _service = korisnikService;
+        }
+        
+        [HttpGet("me")]
+        public async Task<IActionResult> GetMyProfile()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-    [HttpGet]
-    public async Task<IActionResult> Get([FromQuery] string? imePrezime)
-    {
-        return Ok(await _service.GetAsync(imePrezime));
-    }
+            if (userId == null)
+                return Unauthorized();
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetById(int id)
-    {
-        var korisnik = await _service.GetByIdAsync(id);
+            var korisnik = await _service.GetProfilAsync(int.Parse(userId));
 
-        if (korisnik == null)
-            return NotFound();
+            if (korisnik == null)
+                return NotFound();
 
-        return Ok(korisnik);
-    }
+            return Ok(korisnik);
+        }
+        
+        [HttpPatch("me")]
+        public async Task<IActionResult> UpdateProfile(KorisnikProfilUpdateRequest request)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-    [HttpPost]
-    [Authorize(Roles = "Zaposlenik")]
-    public async Task<IActionResult> Insert(KorisniciInsertRequest request)
-    {
-        return Ok(await _service.InsertAsync(request));
-    }
+            if (userId == null)
+                return Unauthorized();
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> Update(int id, KorisniciUpdateRequest request)
-    {
-        var korisnik = await _service.UpdateAsync(id, request);
+            var result = await _service.UpdateProfilAsync(int.Parse(userId), request);
 
-        if (korisnik == null)
-            return NotFound();
+            if(result == null)
+                return NotFound();
 
-        return Ok(korisnik);
-    }
-
-    [HttpDelete("{id}")]
-    [Authorize(Roles = "Zaposlenik")]
-    public async Task<IActionResult> Delete(int id)
-    {
-        var result = await _service.DeleteAsync(id);
-
-        if (!result)
-            return NotFound();
-
-        return NoContent();
-    }
-
-    [HttpGet("profil/{id}")]
-    public async Task<IActionResult> Profil(int id)
-    {
-        var korisnik = await _service.GetProfilAsync(id);
-
-        if (korisnik == null)
-            return NotFound();
-
-        return Ok(korisnik);
-    }
-
-    [HttpPut("profil/{id}")]
-    public async Task<IActionResult> UpdateProfil(
-        int id,
-        KorisnikProfilUpdateRequest request)
-    {
-        var korisnik = await _service
-            .UpdateProfilAsync(id, request);
-
-        if (korisnik == null)
-            return NotFound();
-
-        return Ok(korisnik);
-    }
-
-    [HttpGet("zaposlenici")]
-    [Authorize(Roles = "Zaposlenik")]
-    public async Task<IActionResult> GetZaposlenici()
-    {
-        return Ok(await _service.GetZaposleniciAsync());
+            return Ok(result);
+        }
     }
 }
-

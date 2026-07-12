@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using eHotel.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -112,6 +113,9 @@ builder.Services.AddDbContext<EHotelContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DefaultConnection")
     ));
 
+// Add Seeder
+builder.Services.AddScoped<DatabaseSeeder>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -135,55 +139,16 @@ app.MapControllers();
 // Seed roles and default admin user
 using (var scope = app.Services.CreateScope())
 {
-    var services = scope.ServiceProvider;
+    var seeder = scope.ServiceProvider.GetRequiredService<DatabaseSeeder>();
+
     try
     {
-        var context = services.GetRequiredService<EHotelContext>();
-        // ensure roles
-        if (!context.Uloges.Any(u => u.Naziv == "Gost"))
-        {
-            context.Uloges.Add(new eHotel.Database.Uloge { Naziv = "Gost", Opis = "Gost hotela" });
-        }
-        if (!context.Uloges.Any(u => u.Naziv == "Zaposlenik"))
-        {
-            context.Uloges.Add(new eHotel.Database.Uloge { Naziv = "Zaposlenik", Opis = "Zaposlenik hotela" });
-        }
-        context.SaveChanges();
-
-        // create default admin employee if not exists
-        var adminUser = context.Korisnicis.FirstOrDefault(k => k.KorisnickoIme == "admin");
-        var zaposlenikRole = context.Uloges.FirstOrDefault(r => r.Naziv == "Zaposlenik");
-        if (adminUser == null)
-        {
-            adminUser = new eHotel.Database.Korisnici
-            {
-                Ime = "Admin",
-                Prezime = "Admin",
-                Email = "admin@example.com",
-                KorisnickoIme = "admin",
-                PasswordHash = eHotel.Helpers.PasswordHelper.Hash("Admin123!"),
-                Status = true,
-                DatumRegistracije = DateTime.UtcNow
-            };
-            context.Korisnicis.Add(adminUser);
-            context.SaveChanges();
-        }
-
-        if (zaposlenikRole != null && !context.KorisniciUloges.Any(ku => ku.KorisnikId == adminUser.KorisnikId && ku.UlogaId == zaposlenikRole.UlogaId))
-        {
-            context.KorisniciUloges.Add(new eHotel.Database.KorisniciUloge
-            {
-                KorisnikId = adminUser.KorisnikId,
-                UlogaId = zaposlenikRole.UlogaId,
-                DatumIzmjene = DateTime.UtcNow
-            });
-            context.SaveChanges();
-        }
+        seeder.Seed();
     }
     catch (Exception ex)
     {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "An error occurred seeding the DB.");
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Greška prilikom seedovanja baze.");
     }
 }
 

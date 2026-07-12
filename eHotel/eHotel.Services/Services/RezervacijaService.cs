@@ -194,7 +194,6 @@ public class RezervacijaService : IRezervacijeService
         entity.DatumOd = request.DatumOd;
         entity.DatumDo = request.DatumDo;
         entity.BrojOsoba = request.BrojOsoba;
-        entity.Status = request.Status;
 
         var stareUsluge = _context.RezervacijaUsluges
             .Where(x => x.RezervacijaId == entity.RezervacijaId)
@@ -233,28 +232,6 @@ public class RezervacijaService : IRezervacijeService
         return GetById(entity.RezervacijaId);
     }
 
-    public bool Delete(int id)
-    {
-        var entity = _context.Rezervacijas
-            .Include(x => x.RezervacijaUsluge)
-            .Include(x => x.Placanja)
-            .FirstOrDefault(x => x.RezervacijaId == id);
-
-        if (entity == null)
-            return false;
-
-        if (entity.RezervacijaUsluge.Any())
-            _context.RezervacijaUsluges.RemoveRange(entity.RezervacijaUsluge);
-
-        if (entity.Placanja.Any())
-            _context.Placanjas.RemoveRange(entity.Placanja);
-
-        _context.Rezervacijas.Remove(entity);
-        _context.SaveChanges();
-
-        return true;
-    }
-
     public List<RezervacijaDto> GetByKorisnikId(int korisnikId)
     {
         return _context.Rezervacijas
@@ -279,6 +256,12 @@ public class RezervacijaService : IRezervacijeService
 
         if (entity.Status == (int)StatusRezervacije.Otkazana)
             throw new Exception("Rezervacija je već otkazana.");
+        
+        if(entity.Status == (int)StatusRezervacije.U_Toku)
+            throw new Exception("Rezervacija tokom boravka se ne može otkazati.");
+        
+        if(entity.Status == (int)StatusRezervacije.Zavrsena)
+            throw new Exception("Završena rezervacija se ne može otkazati.");
 
         entity.Status = (int)StatusRezervacije.Otkazana;
         _context.SaveChanges();
@@ -322,12 +305,25 @@ public class RezervacijaService : IRezervacijeService
     
     public RezervacijaDto CheckIn(int rezervacijaId)
     {
-        var entity = _context.Rezervacijas.FirstOrDefault(x => x.RezervacijaId == rezervacijaId);
+        var entity = _context.Rezervacijas
+            .FirstOrDefault(x => x.RezervacijaId == rezervacijaId);
 
-        if (entity == null)
+        if(entity == null)
             throw new Exception("Rezervacija nije pronađena.");
 
-        entity.Status = (int)StatusRezervacije.Potvrdjena;
+        if(entity.Status == (int)StatusRezervacije.Otkazana)
+            throw new Exception("Otkazana rezervacija.");
+
+        if(entity.Status == (int)StatusRezervacije.U_Toku)
+            throw new Exception("Gost je već prijavljen.");
+
+        if(DateTime.Today < entity.DatumOd.Date)
+            throw new Exception("Gost još nije stigao.");
+        
+        if(DateTime.Today > entity.DatumDo.Date)
+            throw new Exception("Termin rezervacije je istekao.");
+
+        entity.Status = (int)StatusRezervacije.U_Toku;
 
         _context.SaveChanges();
 
@@ -337,9 +333,12 @@ public class RezervacijaService : IRezervacijeService
     public RezervacijaDto CheckOut(int rezervacijaId)
     {
         var entity = _context.Rezervacijas.FirstOrDefault(x => x.RezervacijaId == rezervacijaId);
-
+        
         if (entity == null)
             throw new Exception("Rezervacija nije pronađena.");
+        
+        if(entity.Status != (int)StatusRezervacije.U_Toku)
+            throw new Exception("Gost nije trenutno prijavljen.");
 
         entity.Status = (int)StatusRezervacije.Zavrsena;
 

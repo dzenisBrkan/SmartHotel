@@ -3,8 +3,8 @@
     public enum StatusRezervacije
     {
         Kreirana = 0,
-        Potvrdjena = 1,
-        Otkazana = 2,
-        Zavrsena = 3
+        U_Toku = 1,
+        Zavrsena = 2,
+        Otkazana = 3
     }
 }

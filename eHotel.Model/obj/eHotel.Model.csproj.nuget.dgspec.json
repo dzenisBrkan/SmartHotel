@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/admin/Dev/eHotel/eHotel/eHotel.Model/eHotel.Model.csproj": {}
+    "/Users/admin/Dev/eHotel/be/eHotel.Model/eHotel.Model.csproj": {}
   },
   "projects": {
-    "/Users/admin/Dev/eHotel/eHotel/eHotel.Model/eHotel.Model.csproj": {
+    "/Users/admin/Dev/eHotel/be/eHotel.Model/eHotel.Model.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/admin/Dev/eHotel/eHotel/eHotel.Model/eHotel.Model.csproj",
+        "projectUniqueName": "/Users/admin/Dev/eHotel/be/eHotel.Model/eHotel.Model.csproj",
         "projectName": "eHotel.Model",
-        "projectPath": "/Users/admin/Dev/eHotel/eHotel/eHotel.Model/eHotel.Model.csproj",
+        "projectPath": "/Users/admin/Dev/eHotel/be/eHotel.Model/eHotel.Model.csproj",
         "packagesPath": "/Users/admin/.nuget/packages/",
-        "outputPath": "/Users/admin/Dev/eHotel/eHotel/eHotel.Model/obj/",
+        "outputPath": "/Users/admin/Dev/eHotel/be/eHotel.Model/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/admin/.nuget/NuGet/NuGet.Config"

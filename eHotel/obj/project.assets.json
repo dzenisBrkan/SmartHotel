@@ -4491,11 +4491,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/Users/admin/Dev/eHotel/eHotel/eHotel/eHotel.csproj",
+      "projectUniqueName": "/Users/admin/Dev/eHotel/be/eHotel/eHotel.csproj",
       "projectName": "eHotel",
-      "projectPath": "/Users/admin/Dev/eHotel/eHotel/eHotel/eHotel.csproj",
+      "projectPath": "/Users/admin/Dev/eHotel/be/eHotel/eHotel.csproj",
       "packagesPath": "/Users/admin/.nuget/packages/",
-      "outputPath": "/Users/admin/Dev/eHotel/eHotel/eHotel/obj/",
+      "outputPath": "/Users/admin/Dev/eHotel/be/eHotel/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "/Users/admin/.nuget/NuGet/NuGet.Config"
@@ -4510,8 +4510,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "/Users/admin/Dev/eHotel/eHotel/eHotel.Model/eHotel.Model.csproj": {
-              "projectPath": "/Users/admin/Dev/eHotel/eHotel/eHotel.Model/eHotel.Model.csproj"
+            "/Users/admin/Dev/eHotel/be/eHotel.Model/eHotel.Model.csproj": {
+              "projectPath": "/Users/admin/Dev/eHotel/be/eHotel.Model/eHotel.Model.csproj"
             }
           }
         }

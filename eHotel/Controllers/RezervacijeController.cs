@@ -64,7 +64,7 @@ namespace eHotel.Controllers
             return Ok(result);
         }
 
-        [HttpPut("{rezervacijaId}/otkazi")]
+        [HttpPatch("{rezervacijaId}/otkazi")]
         [Authorize(Roles = "Gost")]
         public ActionResult<RezervacijaDto> OtkaziRezervaciju(int rezervacijaId)
         {
@@ -73,14 +73,14 @@ namespace eHotel.Controllers
             return Ok(result);
         }
 
-        [HttpPut("{id}/checkin")]
+        [HttpPost("{id}/checkin")]
         [Authorize(Roles = "Admin,Recepcioner")]
         public ActionResult<RezervacijaDto> CheckIn(int id)
         {
             return Ok(_rezervacijeService.CheckIn(id));
         }
 
-        [HttpPut("{id}/checkout")]
+        [HttpPost("{id}/checkout")]
         [Authorize(Roles = "Admin,Recepcioner")]
         public ActionResult<RezervacijaDto> CheckOut(int id)
         {

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Lx2U3ky9cLk=",
+  "dgSpecHash": "vZ/Gsd9aOLA=",
   "success": true,
-  "projectFilePath": "/Users/admin/Dev/eHotel/eHotel/eHotel/eHotel.csproj",
+  "projectFilePath": "/Users/admin/Dev/eHotel/be/eHotel/eHotel.csproj",
   "expectedPackageFiles": [
     "/Users/admin/.nuget/packages/automapper/12.0.1/automapper.12.0.1.nupkg.sha512",
     "/Users/admin/.nuget/packages/automapper.extensions.microsoft.dependencyinjection/12.0.1/automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",

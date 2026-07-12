@@ -10,3 +10,6 @@ obj/
 # User files
 *.user
 *.suo
+
+.DS_Store
+.idea/

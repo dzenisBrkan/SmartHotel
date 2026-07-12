@@ -7,7 +7,7 @@ namespace eHotel.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Recepcioner")]
     public class ZaposlenikController : ControllerBase
     {
         private readonly IZaposlenikService _service;
@@ -17,10 +17,16 @@ namespace eHotel.Controllers
             _service = service;
         }
 
-        [HttpGet]
-        public ActionResult<List<KorisnikDto>> Get([FromQuery] string? imePrezime)
+        [HttpGet("zaposlenik")]
+        public ActionResult<List<KorisnikDto>> GetZaposlenik([FromQuery] string? imePrezime)
         {
-            return Ok(_service.Get(imePrezime));
+            return Ok(_service.Get("Recepcioner", imePrezime));
+        }
+
+        [HttpGet("gost")]
+        public ActionResult<List<KorisnikDto>> GetGost([FromQuery] string? imePrezime)
+        {
+            return Ok(_service.Get("Gost", imePrezime));
         }
 
         [HttpGet("{id}")]

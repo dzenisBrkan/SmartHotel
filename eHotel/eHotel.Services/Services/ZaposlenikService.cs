@@ -15,11 +15,12 @@ namespace eHotel.eHotel.Services.Services
             _context = context;
         }
 
-        public List<KorisnikDto> Get(string? imePrezime = null)
+        public List<KorisnikDto> Get(string uloga, string? imePrezime = null)
         {
             var query = _context.Korisnicis
                 .Include(x => x.KorisniciUloges)
                     .ThenInclude(ku => ku.Uloga)
+                .Where(x => x.KorisniciUloges.Any(ku => ku.Uloga.Naziv == uloga))
                 .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(imePrezime))

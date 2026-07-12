@@ -4,7 +4,7 @@ namespace eHotel.eHotel.Services.Interface
 {
     public interface IZaposlenikService
     {
-        List<KorisnikDto> Get(string? imePrezime = null);
+        List<KorisnikDto> Get(string uloga, string? imePrezime = null);
         KorisnikDto? GetById(int id);
         KorisnikDto Insert(KorisniciInsertRequest request);
         KorisnikDto? Update(int id, KorisniciUpdateRequest request);

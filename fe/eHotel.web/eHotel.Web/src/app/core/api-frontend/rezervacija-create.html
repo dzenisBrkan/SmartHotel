@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Create Reservation</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <style>
+    form { max-width:720px; margin:1.5rem auto; display:flex; flex-direction:column; gap:0.75rem; }
+    .row { display:flex; gap:0.5rem; }
+    .row > * { flex:1; }
+    .submit-btn { background:#0ea5a4; color:white; border:none; padding:0.7rem 1rem; border-radius:6px; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Create Reservation</h1>
+    <nav><a href="./rezervacije.html" class="page-link">Back to search</a></nav>
+  </header>
+
+  <main>
+    <section>
+      <form id="reservation-form">
+        <div><strong>Selected room:</strong> <span id="selected-room">—</span></div>
+
+        <div class="row">
+          <label>Check-in<input id="checkin" name="checkin" type="date" required /></label>
+          <label>Check-out<input id="checkout" name="checkout" type="date" required /></label>
+        </div>
+
+        <label>Guests<input id="guests" name="guests" type="number" min="1" value="1" required /></label>
+
+        <label>Full name<input id="name" name="name" type="text" required /></label>
+        <label>Email<input id="email" name="email" type="email" required /></label>
+
+        <label>Notes<textarea id="notes" name="notes" rows="3"></textarea></label>
+
+        <div style="display:flex;gap:0.5rem; justify-content:flex-end;">
+          <button type="button" id="cancel-btn" class="close-btn">Cancel</button>
+          <button type="submit" class="submit-btn">Create Reservation</button>
+        </div>
+      </form>
+
+      <pre id="reservation-output" class="output" style="max-width:720px; margin:1rem auto;"></pre>
+    </section>
+  </main>
+
+  <script src="./rezervacija-create.js"></script>
+</body>
+</html>

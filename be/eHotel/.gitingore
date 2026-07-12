@@ -1,0 +1,15 @@
+# Build folders
+bin/
+obj/
+
+# Rider
+.idea/
+*.sln.iml
+*.rsuser
+
+# User files
+*.user
+*.suo
+
+.DS_Store
+.idea/

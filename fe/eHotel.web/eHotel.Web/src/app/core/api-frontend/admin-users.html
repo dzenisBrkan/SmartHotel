@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin Users</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <style>
+    .list-grid { max-width:960px; margin:1.5rem auto; display:grid; gap:1rem; }
+    .item-card { border:1px solid #e5e7eb; border-radius:8px; padding:1rem; }
+    .button { border:none; border-radius:6px; padding:0.65rem 0.9rem; cursor:pointer; }
+    .reload { background:#2563eb; color:white; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Admin Users</h1>
+    <nav>
+      <a href="./admin-dashboard.html" class="page-link">Dashboard</a>
+      <a href="./profile.html" class="page-link">Profile</a>
+    </nav>
+  </header>
+
+  <main class="list-grid">
+    <div class="item-card">
+      <button id="reload-users" class="button reload">Reload users</button>
+    </div>
+    <div id="users-list" class="list-grid"></div>
+  </main>
+
+  <script src="./admin-users.js"></script>
+</body>
+</html>

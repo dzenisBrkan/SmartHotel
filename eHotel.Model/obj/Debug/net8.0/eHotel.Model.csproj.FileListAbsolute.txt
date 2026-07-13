@@ -1,0 +1,12 @@
+/Users/admin/Dev/eHotel/eHotel/eHotel.Model/bin/Debug/net8.0/eHotel.Model.deps.json
+/Users/admin/Dev/eHotel/eHotel/eHotel.Model/bin/Debug/net8.0/eHotel.Model.dll
+/Users/admin/Dev/eHotel/eHotel/eHotel.Model/bin/Debug/net8.0/eHotel.Model.pdb
+/Users/admin/Dev/eHotel/eHotel/eHotel.Model/obj/Debug/net8.0/eHotel.Model.GeneratedMSBuildEditorConfig.editorconfig
+/Users/admin/Dev/eHotel/eHotel/eHotel.Model/obj/Debug/net8.0/eHotel.Model.AssemblyInfoInputs.cache
+/Users/admin/Dev/eHotel/eHotel/eHotel.Model/obj/Debug/net8.0/eHotel.Model.AssemblyInfo.cs
+/Users/admin/Dev/eHotel/eHotel/eHotel.Model/obj/Debug/net8.0/eHotel.Model.csproj.CoreCompileInputs.cache
+/Users/admin/Dev/eHotel/eHotel/eHotel.Model/obj/Debug/net8.0/eHotel.Model.sourcelink.json
+/Users/admin/Dev/eHotel/eHotel/eHotel.Model/obj/Debug/net8.0/eHotel.Model.dll
+/Users/admin/Dev/eHotel/eHotel/eHotel.Model/obj/Debug/net8.0/refint/eHotel.Model.dll
+/Users/admin/Dev/eHotel/eHotel/eHotel.Model/obj/Debug/net8.0/eHotel.Model.pdb
+/Users/admin/Dev/eHotel/eHotel/eHotel.Model/obj/Debug/net8.0/ref/eHotel.Model.dll

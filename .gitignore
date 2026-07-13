@@ -499,3 +499,5 @@ FodyWeavers.xsd
 *.msm
 *.msp
 >>>>>>> ce4b321f2394450b0e8b084dc20554cc767b1f1e
+
+.DS_Store

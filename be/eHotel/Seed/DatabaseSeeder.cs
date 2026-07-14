@@ -16,6 +16,7 @@ namespace eHotel.Seed
         {
             SeedRoles();
             SeedAdmin();
+            SeedRecepcionar();
             SeedRoomTypes();
             SeedServices();
             SeedRooms();
@@ -56,7 +57,7 @@ namespace eHotel.Seed
                     Ime = "Admin",
                     Prezime = "Sistem",
                     Email = "admin@ehotel.ba",
-                    Telefon = "000000000",
+                    Telefon = "062333111",
                     KorisnickoIme = "admin",
                     PasswordHash = PasswordHelper.Hash("admin123"),
                     Status = true,
@@ -80,6 +81,38 @@ namespace eHotel.Seed
 
                 _context.SaveChanges();
             }
+        }
+        
+        private void SeedRecepcionar()
+        {
+            if (_context.Korisnicis.Any(x => x.KorisnickoIme == "recepcionar"))
+                return;
+
+            var recepcionar = new Korisnici
+            {
+                Ime = "Recepcionar",
+                Prezime = "Sistem",
+                Email = "recepcionar@ehotel.ba",
+                Telefon = "062333222",
+                KorisnickoIme = "recepcionar",
+                PasswordHash = PasswordHelper.Hash("recepcionar123"),
+                Status = true,
+                DatumRegistracije = DateTime.Now
+            };
+
+            _context.Korisnicis.Add(recepcionar);
+            _context.SaveChanges();
+
+            var role = _context.Uloges.First(x => x.Naziv == "Recepcioner");
+
+            _context.KorisniciUloges.Add(new KorisniciUloge
+            {
+                KorisnikId = recepcionar.KorisnikId,
+                UlogaId = role.UlogaId,
+                DatumIzmjene = DateTime.Now
+            });
+
+            _context.SaveChanges();
         }
 
         private void SeedRoomTypes()
